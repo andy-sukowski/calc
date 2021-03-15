@@ -36,17 +36,6 @@ int prec(char op)
 	}
 }
 
-/* Check if given token is an operand */
-bool is_operand(char *token)
-{
-	char *foo;
-	strtod(token, &foo);
-	if (token != foo)
-		return true;
-	else
-		return false;
-}
-
 /* Check if given token is an operator */
 bool is_operator(char token)
 {
