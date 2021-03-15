@@ -6,12 +6,13 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "stack.h"
 
 struct node_float *operands = NULL;
 struct node_char *operators = NULL;
 
-/* Can store an operator or a token */
+/* Can store an operator or an operand */
 struct token {
 	char operator;
 	float operand;
@@ -95,8 +96,8 @@ struct token *tokenize(char **expr)
 
 	if (op_allowed && is_operator(*expr[0])) {
 		token->operator = *expr[0];
-		op_allowed = false;
 		(*expr)++;
+		op_allowed = false;
 	} else if (!op_allowed && *expr[0] == '(') {
 		token->operator = *expr[0];
 		(*expr)++;
@@ -106,6 +107,7 @@ struct token *tokenize(char **expr)
 	} else {
 		char *rest;
 		token->operand = strtof(*expr, &rest);
+		token->operator = '\0';
 		if (*expr == rest) {
 			printf("Invalid expression\n");
 			exit(EXIT_FAILURE);
@@ -115,7 +117,6 @@ struct token *tokenize(char **expr)
 	}
 
 	rmspaces(expr);
-
 	return token;
 }
 
@@ -140,7 +141,7 @@ void handle_token(struct token *token)
 		}
 		pop_char(&operators);
 	} else {
-		printf("Ivalid operator: %c\n", token->operator);
+		printf("Invalid operator: %c\n", token->operator);
 		exit(EXIT_FAILURE);
 	}
 }
